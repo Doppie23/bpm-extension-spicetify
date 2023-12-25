@@ -1,0 +1,17 @@
+.BPM-text {
+  font-size: 0.6rem;
+  box-sizing: border-box;
+  margin-block: 0px;
+  font-weight: 400;
+  font-family: var(
+    --font-family,
+    CircularSp,
+    CircularSp-Arab,
+    CircularSp-Hebr,
+    CircularSp-Cyrl,
+    CircularSp-Grek,
+    CircularSp-Deva,
+    var(--fallback-fonts, sans-serif)
+  );
+  color: var(--text-subdued, #6a6a6a);
+}
