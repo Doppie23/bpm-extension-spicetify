@@ -1,26 +1,26 @@
 import extractIdFromSpotifyURI from "./utils/extractID";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { clientId, clientSecret } from "../env";
 
 import "./style.css";
 
-type AudioFeatures = {
-  tempo: number;
-};
-
 async function main() {
-  Spicetify.Player.addEventListener("songchange", (e) => {
+  Spicetify.Player.addEventListener("songchange", async (e) => {
     try {
       setBPMElementText("Loading bpm...");
-      const songUID = e?.data.track?.uri;
+
+      const songUID = e?.data.item.uri;
       const songID = songUID ? extractIdFromSpotifyURI(songUID) : undefined;
       if (!songID) {
         throw new Error("Kon nummer niet vinden");
       }
-      Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/audio-features/${songID}`).then((res: AudioFeatures) => {
-        const tempo = Math.round(res.tempo);
-        setBPMElementText(`${tempo} BPM`);
-      });
+
+      const sdk = SpotifyApi.withClientCredentials(clientId, clientSecret);
+
+      const res = await sdk.tracks.audioFeatures(songID);
+      const tempo = Math.round(res.tempo);
+      setBPMElementText(`${tempo} BPM`);
     } catch (error) {
-      console.log("test");
       console.error(error);
       removeElement();
     }
@@ -33,7 +33,9 @@ function setBPMElementText(text: string) {
     bpmElement.innerHTML = text;
   } else {
     // Element toevoegen want bestaat nog niet
-    const nowPlaylingWidget = document.querySelector(".main-trackInfo-container");
+    const nowPlaylingWidget = document.querySelector(
+      ".main-trackInfo-container"
+    );
     if (nowPlaylingWidget == null) {
       throw new Error("Kan widget niet vinden");
     }

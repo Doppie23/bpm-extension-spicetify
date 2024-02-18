@@ -1,16 +1,17 @@
-# Spicetify Creator
+The extension broke with Spotify v1.2.31 and Spicetify v2.31.3.
 
-Spicetify Creator is a tool to compile modern Typescript/Javascript code to Spicetify extensions and custom apps.
+The temporary fix is to create an `./env.ts` (see `./env.ts.example`)
 
-## Features
-- Typescript and React syntax
-- Import node packages
-- CSS/SCSS with PostCSS support
-- Extremely fast compile time with esbuild.
-- Plugins
+# Building
 
-## Docs
-Check out [Spicetify's docs](https://spicetify.app/docs/development/spicetify-creator/the-basics)!
+```
+npm run build
+```
 
-## Made with Spicetify Creator
-- https://github.com/spicetify/spicetify-creator
+```
+spicetify config extensions bpm-extensie.js
+```
+
+```
+spicetify apply
+```
