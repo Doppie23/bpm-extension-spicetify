@@ -4,7 +4,7 @@ import pitchClassToKey from "./utils/pitchClassToKey";
 async function main() {
   let songData: (Track & { name: string }) | undefined;
 
-  Spicetify.Player.addEventListener("onplaypause", async (e) => {
+  Spicetify.Player.addEventListener("songchange", async (e) => {
     try {
       setBPMElementText("Loading bpm...");
 
