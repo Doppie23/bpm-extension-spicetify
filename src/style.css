@@ -16,3 +16,17 @@
   color: var(--text-subdued, #6a6a6a);
   grid-row: 4;
 }
+
+.BPM-text:hover {
+  cursor: pointer;
+  color: var(--interactive-normal, #fff);
+  text-decoration: underline;
+}
+
+.song_info {
+  color: var(--text-subdued);
+}
+
+.song_info__data {
+  color: var(--text-base);
+}
