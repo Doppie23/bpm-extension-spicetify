@@ -8,9 +8,9 @@ async function main() {
     try {
       setBPMElementText("Loading bpm...");
 
-      const songUID = e?.data.item.uri;
+      const res = await Spicetify.getAudioData();
+      if (!res || !res.track) throw new Error("No track data");
 
-      const res = await Spicetify.getAudioData(songUID);
       const trackData = res.track as Track;
       songData = { ...trackData, name: e?.data.item.metadata.title };
 
@@ -18,6 +18,7 @@ async function main() {
       setBPMElementText(`${tempo} BPM`);
     } catch (error) {
       console.error(error);
+      Spicetify.showNotification("Error getting audio data", true);
       removeElement();
     }
   });
@@ -65,7 +66,7 @@ async function main() {
         ".main-nowPlayingWidget-trackInfo"
       );
       if (nowPlaylingWidget == null) {
-        throw new Error("Kan widget niet vinden");
+        throw new Error("Could not find now playing widget");
       }
       nowPlaylingWidget.appendChild(createBpmElement());
     }
