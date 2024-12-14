@@ -1,26 +1,35 @@
 import "./style.css";
 import pitchClassToKey from "./utils/pitchClassToKey";
 
+const RETRY_ATTEMPTS = 3;
+
 async function main() {
   let songData: (Track & { name: string }) | undefined;
 
   Spicetify.Player.addEventListener("songchange", async (e) => {
-    try {
+    for (let i = 0; i < RETRY_ATTEMPTS; i++) {
       setBPMElementText("Loading bpm...");
 
-      const res = await Spicetify.getAudioData();
-      if (!res || !res.track) throw new Error("No track data");
+      try {
+        const res = await Spicetify.getAudioData();
+        if (!res || !res.track) throw new Error("No track data");
 
-      const trackData = res.track as Track;
-      songData = { ...trackData, name: e?.data.item.metadata.title };
+        const trackData = res.track as Track;
+        songData = { ...trackData, name: e?.data.item.metadata.title };
 
-      const tempo = Math.round(songData.tempo);
-      setBPMElementText(`${tempo} BPM`);
-    } catch (error) {
-      console.error(error);
-      Spicetify.showNotification("Error getting audio data", true);
-      removeElement();
+        const tempo = Math.round(songData.tempo);
+        setBPMElementText(`${tempo} BPM`);
+        return;
+      } catch (error) {
+        console.error(error);
+        if (i + 1 < RETRY_ATTEMPTS)
+          console.log(`Retrying, attempt ${i + 1}/${RETRY_ATTEMPTS}}`);
+      }
     }
+
+    Spicetify.showNotification("Error getting track data", true);
+    console.log(`Failed getting track data after ${RETRY_ATTEMPTS} attempts}`);
+    removeElement();
   });
 
   function clickHandler() {
