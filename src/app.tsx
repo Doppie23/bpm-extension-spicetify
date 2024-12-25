@@ -2,6 +2,7 @@ import "./style.css";
 import pitchClassToKey from "./utils/pitchClassToKey";
 
 const RETRY_ATTEMPTS = 3;
+const TIME_BETWEEN_RETRIES_ms = 1000;
 
 async function main() {
   let songData: (Track & { name: string }) | undefined;
@@ -23,7 +24,14 @@ async function main() {
       } catch (error) {
         console.error(error);
         if (i + 1 < RETRY_ATTEMPTS)
-          console.log(`Retrying, attempt ${i + 1}/${RETRY_ATTEMPTS}}`);
+          console.log(
+            `Retrying in ${TIME_BETWEEN_RETRIES_ms} ms, attempt ${
+              i + 1
+            }/${RETRY_ATTEMPTS}}`
+          );
+        await new Promise((resolve) =>
+          setTimeout(resolve, TIME_BETWEEN_RETRIES_ms)
+        );
       }
     }
 
